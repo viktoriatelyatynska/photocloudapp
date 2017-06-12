@@ -1,0 +1,30 @@
+{
+  "name": "photocloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-angular-order": "^1.0.1",
+    "gulp-angular-templatecache": "^2.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-uglify": "^2.0.0",
+    "lodash": "^4.16.5"
+  },
+  "dependencies": {
+    "angular": "~1.5.8",
+    "angular-animate": "~1.5.8",
+    "angular-aria": "~1.5.8",
+    "angular-material": "~1.1.1",
+    "angular-messages": "~1.5.8",
+    "angular-ui-router": "~0.3.1",
+    "angular-sanitize": "~1.6.0"
+  }
+}

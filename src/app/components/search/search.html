@@ -1,0 +1,12 @@
+<md-autocomplete style="border-style:none;" md-selected-item="selectedItem" md-selected-item-change="selectedItemChange(selectedItem)"
+    md-search-text="searchText" md-items="item in search(searchText)" md-item-text="item.username" class="search-box" placeholder="Search" flex>
+    <md-item-template>
+        <div class="item-title" layout="row" layout-align="start center">
+            <img class="post-profile-image" ng-src="{{item.imageUri}}" alt="profile image">
+            <span style="padding: 0px 0px 0px 10px;"> {{item.username}} </span>
+        </div>
+    </md-item-template>
+    <md-not-found>
+        <span>There are no matches</span>
+    </md-not-found>
+</md-autocomplete>

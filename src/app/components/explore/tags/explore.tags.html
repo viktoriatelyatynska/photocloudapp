@@ -1,0 +1,32 @@
+<div layout="column" layout-align="center center" style="padding:50px 0px 50px 0px;">
+    <div layout="column" style="width:1500px;">
+        <div layout="column" layout-align="center center">
+            <span class="md-display-1">#{{vm.tag}}</span>
+            <div layout="row" layout-align="center center">
+                <span class="md-title">{{vm.feed.totalCount}}</span>
+                <span class="md-subhead" style="margin-left: 5px;">posts total</span>
+            </div>
+        </div>
+        <div layout="row" style="margin-top:50px;">
+            <div layout="row" layout-align="center start" layout-wrap>
+                <md-card layout="column" ng-repeat="post in vm.feed.items" style="width: 400px;margin: 0px 25px 50px 25px;">
+                    <img ng-src="{{post.attachments[0].url}}" alt="post.user.username" style="width: 400px;">
+                    <div layout="column" style="padding: 25px;">
+                        <span class="md-headline">@{{post.user.username}}</span>
+                        <span class="md-headline" ng-bind-html="post.caption | content"></span>
+                        <md-divider style="margin-top: 15px;"></md-divider>
+                        <div layout="row" layout-align="start start" style="margin-top: 25px;padding-right:25px;">
+                            <md-icon>favorite</md-icon>
+                            <span>{{post.likesCount}} people liked</span>
+                            <md-icon>chat_bubble</md-icon>
+                            <span>{{post.commentsCount}} comments</span>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" style="padding-top: 25px;" ng-if="feed.hasMoreItems">
+            <md-button ng-click="vm.getPosts()">LOAD MORE</md-button>
+        </div>
+    </div>
+</div>

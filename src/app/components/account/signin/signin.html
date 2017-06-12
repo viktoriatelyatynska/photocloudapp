@@ -1,0 +1,31 @@
+<div class="content" layout="row" layout-align="center center">
+    <form class="form" name="signInForm" ng-submit="vm.signIn()" layout="column">
+        <div class="logo" layout="row" layout-align="center center">
+            <img src="assets/images/logo.png" alt="logo">
+        </div>
+        <div class="form-item" layout="row" layout-align="start center">
+            <md-input-container class="md-block" md-no-float flex>
+                <input ng-class="{'form-invalid' : vm.account.isUsernameValid == false, 'light' : vm.account.isUsernameValid == true}" type="text"
+                    name="username" placeholder="Username" ng-model="vm.account.username" aria-label="account">
+            </md-input-container>
+        </div>
+        <div class="form-item" layout="row" layout-align="start center">
+            <md-input-container class="md-block" md-no-float flex>
+                <input ng-class="{'form-invalid' : vm.account.isPasswordValid == false, 'light' : vm.account.isPasswordValid == true}" type="password"
+                    name="password" placeholder="Enter your password" ng-model="vm.account.password" aria-label="account">
+            </md-input-container>
+        </div>
+        <md-checkbox ng-model="vm.account.remember">Remember me?</md-checkbox>
+        <div class="row" layout="column" layout-align="center center">
+            <md-progress-circular class="md-primary" md-diameter="35px" ng-if="vm.isLoading"></md-progress-circular>
+            <md-button class="md-raised md-primary fill" type="submit" ng-disabled="vm.isLoading" ng-if="!vm.isLoading">
+                {{ vm.isLoading ? 'Loading' : 'Sign In' }}
+            </md-button>
+            <div class="error" ng-if="vm.error">
+                <span>{{vm.error}}</span>
+            </div>
+            <md-divider class="row fill"></md-divider>
+            <md-button class="md-raised button-facebook fill">Login with Facebook</md-button>
+        </div>
+    </form>
+</div>

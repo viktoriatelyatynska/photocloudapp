@@ -1,0 +1,29 @@
+<div class="user-info-bar" layout="row" layout-align="center center" ng-if="user">
+    <div layout="column" layout-align="center end" flex="20">
+        <img class="user-bar-image" ng-src="{{user.imageUri}}" alt="profile" />
+    </div>
+    <div class="md-padding" layout="column" layout-align="stretch stretch" flex>
+        <div layout="row" layout-align="space-between center">
+            <span class="md-display-1" style="font-weight: lighter;">{{user.username}}</span>
+            <md-button class="button-bordered" ng-class="{'green' : user.relationshipStatus === 'Followed', 'orange' : user.relationships.outgoingStatus === 'Requested'}" ng-click="invertRelationshipsWithUser()" ng-if="user.isActive && currentUserName && user.username && currentUserName != user.username && !isLoading">{{user.relationshipStatus | relationshipButton}}</md-button>
+        </div>
+        <div class="counters" layout="row" layout-align="start center" ng-if="user.isActive">
+            <div flex="20">
+                <span class="md-title">{{user.counters.posts}} </span>
+                <span class="md-subhead">posts </span>
+            </div>
+            <div flex="20">
+                <span class="md-title">{{user.counters.followers}} </span>
+                <span class="md-subhead">followers </span>
+            </div>
+            <div flex="20">
+                <span class="md-title">{{user.counters.follows}} </span>
+                <span class="md-subhead">follows</span>
+            </div>
+        </div>
+        <div layout="row" layout-align="start center" style="margin-top: 15px;">
+            <span class="md-subhead" style="font-size: 17px;font-weight: bold;padding-right: 10px;">{{user.fullName}}</span>
+            <span class="md-subhead" style="font-size: 17px;font-weight: normal;padding-right: 10px;">{{user.bio}}</span>
+        </div>
+    </div>
+</div>

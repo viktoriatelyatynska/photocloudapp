@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html ng-app="photocloud">
+
+<head ng-controller="TitleController">
+    <title ng-bind="pageService.title"></title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link href="assets/libs/css/angular-material.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" />
+    <link href="assets/styles.css" rel="stylesheet" />
+</head>
+
+<body ng-controller="IndexController as vm" ng-cloak>
+    <header ng-if="vm.pageService.navbarVisible">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <div class="fill" layout="row" layout-align="center stretch">
+                    <div layout="row" layout-align="center center" flex="25">
+                        <div layout="row" layout-align="center center" flex="50">
+                            <md-progress-circular class="md-black" md-mode="indeterminate" md-diameter="25" ng-if="vm.pageService.isLoading"></md-progress-circular>
+                        </div>
+                        <div layout="row" layout-align="center center" flex="50">
+                            <a class="logo-text" ui-sref="feed" layout="row" layout-align="end end">photocloud</a>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="center center" flex>
+                        <search class="search-bar" ng-if="vm.currentUser.isAuthenticated && vm.currentUser.isActive"></search>
+                    </div>
+                    <div layout="row" layout-align="center center" flex="25" ng-if="vm.currentUser.isAuthenticated">
+                        <div layout="row" layout-align="center end" flex="25">
+                            <div ui-sref="explore.people" class="icon material-icons mdl-badge" data-badge="1" ng-if="vm.currentUser.isActive">explore</div>
+                        </div>
+                        <div layout="row" layout-align="center end" flex="25" ng-if="vm.currentUser.isAuthenticated && vm.currentUser.isActive && vm.currentUser.isPrivate">
+                            <md-menu md-offset="100 55" md-position-mode="target-right target">
+                                <div ui-sref="users" class="icon material-icons mdl-badge" data-badge="1" ng-click="$mdMenu.open($event)">{{ vm.requests.length > 0 ? 'notifications_active' : 'notifications' }}</div>
+                                <md-menu-content width="6">
+                                    <div layout="column" layout-align="center center" ng-if="vm.requests.length == 0">
+                                        <span>No pending requests</span>
+                                    </div>
+                                    <md-content ng-if="vm.requests.length > 0">
+                                        <div layout="column">
+                                            <div class="md-padding">
+                                                <span class="md-subtitle">Incomming requests</span>
+                                            </div>
+                                            <div class="md-padding-wide">
+                                                <md-divider></md-divider>
+                                            </div>
+                                            <div class="md-padding left" layout="row" layout-align="start center" ng-repeat="user in vm.requests">
+                                                <img class="follower-profile-image" ui-sref="userfeed({username : user.username})" ng-src="{{user.imageUri}}" alt="user.username">
+                                                <div class="md-padding" layout="column">
+                                                    <span><a class="bold" ui-sref="userfeed({username : user.username})">{{user.username}}</a>
+                                                        started following you
+                                                    </span>
+                                                    <div class="md-padding top" layout="row">
+                                                        <md-button class="md-primary md-no-focus" ng-click="vm.acceptRequest($index)">Accept</md-button>
+                                                        <md-button class="md-warn md-no-focus" ng-click="vm.rejectRequest($index)">Decline</md-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </md-content>
+                                </md-menu-content>
+                            </md-menu>
+                        </div>
+                        <div flex>
+                            <md-menu>
+                                <md-button class="md-icon-button navbar-button" aria-label="Open menu" ng-click="$mdMenu.open($event)">
+                                    <div layout="row" layout-align="center center">
+                                        <img class="navbar-image" ng-src="{{vm.currentUser.imageUri}}" alt="profile image">
+                                    </div>
+                                </md-button>
+                                <md-menu-content width="3">
+                                    <md-menu-item>
+                                        <md-button ui-sref="userfeed({username : vm.currentUser.username})">
+                                            <md-icon>home</md-icon>
+                                            My Profile
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ui-sref="settings">
+                                            <md-icon>settings</md-icon>
+                                            Settings
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-divider></md-menu-divider>
+                                    <md-menu-item>
+                                        <md-button ng-click="vm.signOut()">
+                                            <md-icon>exit_to_app</md-icon>
+                                            Sign out
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start center" flex="30" ng-if="!vm.currentUser.isAuthenticated">
+                        <md-button ui-sref="signup"><span class="bold">Create account</span></md-button>
+                        <md-button class="md-primary" ui-sref="signin"><span class="bold">Sign In</span></md-button>
+                    </div>
+                </div>
+            </div>
+        </md-toolbar>
+    </header>
+
+    <main>
+        <ui-view></ui-view>
+    </main>
+
+    <footer ng-if="vm.pageService.navbarVisible">
+        <div class="footer" layout="row" layout-align="center center">
+            <span>Copyright &copy; {{ vm.date | date : 'yyyy' }} PhotoCloud</span>
+        </div>
+    </footer>
+
+    <script src="assets/libs/js/angular.min.js"></script>
+    <script src="assets/libs/js/angular-ui-router.min.js"></script>
+    <script src="assets/libs/js/angular-material.min.js"></script>
+    <script src="assets/libs/js/angular-aria.min.js"></script>
+    <script src="assets/libs/js/angular-animate.min.js"></script>
+    <script src="assets/libs/js/angular-messages.min.js"></script>
+    <script src="assets/libs/js/angular-sanitize.min.js"></script>
+
+    <script src="app/angular.module.js"></script>
+    <script src="app/app.routes.js"></script>
+    <script src="app/app.run.js"></script>
+
+    <script src="app/components/title/title.controller.js"></script>
+    <script src="app/components/userinfo/user-info.component.js"></script>
+    <script src="app/components/userinfo/user-info.controller.js"></script>
+
+    <script src="app/components/posts/post/post.component.js"></script>
+    <script src="app/components/posts/post/post.controller.js"></script>
+
+    <script src="app/components/posts/post-details/dialogs/post-details-dialog.controller.js"></script>
+    <script src="app/components/posts/post-details/post-details.controller.js"></script>
+
+    <script src="app/components/userinfo/user.service.js"></script>
+
+    <script src="app/components/posts/feed/posts.controller.js"></script>
+    <script src="app/components/posts/user-posts/user-posts.controller.js"></script>
+    <script src="app/components/posts/shared/posts.service.js"></script>
+
+    <script src="app/components/account/signin/signin.controller.js"></script>
+    <script src="app/components/account/create/create-account.controller.js"></script>
+    <script src="app/components/account/shared/account.service.js"></script>
+
+    <script src="app/components/upload/create-post.controller.js"></script>
+    <script src="app/components/index/index.controller.js"></script>
+    <script src="app/components/search/search.controller.js"></script>
+    <script src="app/components/search/search.component.js"></script>
+    <script src="app/components/search/search.service.js"></script>
+    <script src="app/components/users/users.controller.js"></script>
+    <script src="app/components/errors/error.service.js"></script>
+    <script src="app/components/errors/error.controller.js"></script>
+    <script src="app/components/settings/settings.controller.js"></script>
+    <script src="app/components/settings/settings.service.js"></script>
+    <script src="app/components/fullscreen/fullscreen.controller.js"></script>
+    <script src="app/components/comments/comments.controller.js"></script>
+    <script src="app/components/comments/comments.component.js"></script>
+    <script src="app/components/comments/comment.service.js"></script>
+    <script src="app/components/caption/caption.component.js"></script>
+
+    <script src="app/components/explore/explore.controller.js"></script>
+    <script src="app/components/explore/people/explore-people.controller.js"></script>
+    <script src="app/components/explore/people/explore-people.service.js"></script>
+
+    <script src="app/components/explore/tags/explore-tags.controller.js"></script>
+
+    <script src="app/shared/directives/file-model.directive.js"></script>
+    <script src="app/shared/services/toast.service.js"></script>
+    <script src="app/shared/services/http.service.js"></script>
+    <script src="app/shared/services/upload.service.js"></script>
+    <script src="app/shared/infrastructure/const.service.js"></script>
+    <script src="app/shared/infrastructure/auth.service.js"></script>
+    <script src="app/shared/infrastructure/authinterpretator.service.js"></script>
+    <script src="app/shared/infrastructure/page.service.js"></script>
+    <script src="app/shared/filters/date.filter.js"></script>
+    <script src="app/shared/filters/relationships.filter.js"></script>
+    <script src="app/shared/filters/status.filters.js"></script>
+    <script src="app/shared/filters/account-action-status.filter.js"></script>
+    <script src="app/shared/filters/content.filter.js"></script>
+</body>
+
+</html>

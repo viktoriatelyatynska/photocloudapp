@@ -1,0 +1,81 @@
+<div class="post" ng-if="vm.post.isCreating">
+    <div class="post-content" layout="column">
+        <img ng-src="{{vm.post.attachments[0].url}}" alt="post-image">
+        <div class="post-overlay" layout="row" layout-align="center center">
+            <md-progress-circular class="md-primary" md-diameter="70"></md-progress-circular>
+        </div>
+    </div>
+</div>
+<div class="post" ng-if="!vm.post.isCreating">
+    <div class="post-header" layout="row" layout-align="start center">
+        <img class="avatar" ng-src="{{vm.post.user.imageUri}}" alt="avatar">
+        <div class="details" layout="row" layout-align="space-between center" flex>
+            <a class="name" ui-sref="userfeed({username: vm.post.user.username})">{{vm.post.user.username}}</a>
+            <span class="date">{{vm.post.created | difference}}</span>
+        </div>
+    </div>
+    <div class="post-content" md-ink-ripple>
+        <img ng-src="{{vm.post.attachments[vm.post.activeAttachment].url}}" alt="post-image">
+        <div class="post-slideshow" layout="row" layout-align="start center" ng-if="vm.post.attachments.length > 1">
+            <md-button class="md-icon-button arrow" ng-click="vm.previous()" md-whiteframe="10" ng-hide="vm.post.activeAttachment === 0">
+                <md-icon class="post-slideshow-arrow">chevron_left</md-icon>
+            </md-button>
+        </div>
+        <div class="post-slideshow" layout="row" layout-align="end center" ng-if="vm.post.attachments.length > 1" ng-hide="vm.post.activeAttachment === vm.post.attachments.length - 1">
+            <md-button class="md-icon-button arrow" ng-click="vm.next()" md-whiteframe="10">
+                <md-icon class="post-slideshow-arrow">chevron_right</md-icon>
+            </md-button>
+        </div>
+    </div>
+    <div class="post-footer">
+        <div style="height: 35px;" layout="row" layout-align="center center" ng-if="vm.post.attachments.length > 1">
+            <div ng-repeat="attachment in vm.post.attachments">
+                <md-icon class="post-badge" ng-class="{ 'active' : vm.post.activeAttachment === $index }">
+                    lens
+                </md-icon>
+            </div>
+        </div>
+        <div class="post-likes">
+            <a class="md-body-2">{{vm.post.likesCount}} likes</a>
+        </div>
+        <post-caption post="vm.post" ng-if="vm.post.caption"></post-caption>
+        <comments post="vm.post" ng-if="vm.post.commentsCount > 0"></comments>
+        <md-divider class="divider-padding"></md-divider>
+        <div layout="row" layout-align="space-between center">
+            <md-button class="md-icon-button" ng-click="vm.like(vm.post)">
+                <md-icon ng-class="{'liked': vm.post.userHasLiked}">favorite</md-icon>
+            </md-button>
+            <md-input-container class="md-block comment-input-container " md-no-float flex>
+                <input class="comment-box" type="text" placeholder="Add a comment" ng-model="vm.newComment.text" ng-keydown="vm.postComment(vm.newComment, vm.post, $event)" />
+            </md-input-container>
+            <div>
+                <md-menu>
+                    <md-button class="md-icon-button" aria-label="Open phone interactions menu" ng-click="vm.openMenu($mdMenu.open, $event)">
+                        <md-icon>more_horiz</md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button>
+                                <md-icon>file_download</md-icon>
+                                Download
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-click="vm.removeCallback()" ng-if="vm.post.user.id == vm.authService.userId">
+                            <md-button>
+                                <md-icon>clear</md-icon>
+                                Delete
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-divider></md-menu-divider>
+                        <md-menu-item>
+                            <md-button ui-sref="fullscreen({url : vm.post.attachments[0].url})" target="_blank">
+                                <md-icon>star_rate</md-icon>
+                                Open full size
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+    </div>
+</div>
